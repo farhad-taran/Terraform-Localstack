@@ -6,14 +6,25 @@ services:
     image: localstack/localstack:latest
     container_name: localstack
     environment:
-     - SERVICES=s3,sns,sqs
+     - SERVICES=dynamodb,s3,sns,sqs
      - DEFAULT_REGION=eu-west-2
      - DATA_DIR=/tmp/localstack/data
     ports:
+     - "4569:4569"
      - "4572:4572"
+     - "4575:4575"
+     - "4576:4576"
      - "9999:8080"
     volumes:
       - localstack-data:/tmp/localstack
+  dynamodb-admin:
+      depends_on:
+        - localstack
+      image: aaronshaf/dynamodb-admin
+      ports:
+        - 8001:8001
+      environment:
+        - DYNAMO_ENDPOINT=http://localstack:4569
 
 volumes:
 
